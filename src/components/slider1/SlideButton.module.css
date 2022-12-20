@@ -1,0 +1,21 @@
+.button {
+  position: absolute;
+  height: 100%;
+  background-color: transparent;
+  border: none;
+  z-index: 99;
+  cursor: pointer;
+}
+
+.right {
+  right: 0;
+}
+
+.left {
+  left: 0;
+}
+
+.icon {
+  font-size: 30px;
+  color: gray;
+}
