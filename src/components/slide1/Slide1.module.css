@@ -7,7 +7,6 @@
   position: relative;
   display: block;
   user-select: none;
-  touch-action: pan-y;
 }
 .list {
   position: relative;
