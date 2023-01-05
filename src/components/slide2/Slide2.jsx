@@ -115,35 +115,37 @@ export default function Slide2() {
 
   //FIXME: 슬라이드를 제일 마지막으로 이동 시킨 후 화면 크기를 크게 늘리거나 하면 슬라이드 내용이 사라지는 버그 수정
   // innderWidth가 변경되면서 sliderIndex 값이 적절하게 변경되지 않아서 발생하는 문제로 추정 됨
-  // try 1 : 나름 수정했으나 첫번째 슬라이드로 돌아가는 형태로 수정함
+  // 일단 화면 크기별 가질수 있는 sliderIndex의 최대값 보다 sliderIndex 같거나 클 경우 slideIndex와 position을 progressBarItemCount - 1 값을 갖게 수정
+  // 넷플릭스 슬라이드처럼 동작하게 하는 방법 생각해봐야 할 것 같음
   const checkWindowSize = useCallback(() => {
     if (window.innerWidth > 1440) {
       setItemPerScreen(6);
-      if (sliderIndex !== 0 && progressBarItemCount >= sliderIndex) {
-        setSliderIndex(Math.floor(sliderIndex / itemPerScreen));
-        setPostion(0);
+      if (sliderIndex !== 0 && sliderIndex >= 1) {
+        setSliderIndex(progressBarItemCount - 1);
+        setPostion(progressBarItemCount - 1);
       }
       return;
     }
 
     if (window.innerWidth > 768) {
       setItemPerScreen(4);
-      if (sliderIndex !== 0 && progressBarItemCount >= sliderIndex) {
-        setSliderIndex(Math.floor(sliderIndex / itemPerScreen));
-        setPostion(0);
+      if (sliderIndex !== 0 && sliderIndex >= 3) {
+        setSliderIndex(progressBarItemCount - 1);
+        setPostion(progressBarItemCount - 1);
       }
       return;
     }
 
     if (window.innerWidth > 0) {
       setItemPerScreen(2);
-      if (sliderIndex !== 0 && progressBarItemCount >= sliderIndex) {
-        setSliderIndex(Math.floor(sliderIndex / itemPerScreen));
-        setPostion(0);
+      if (sliderIndex !== 0 && sliderIndex >= 6) {
+        setSliderIndex(progressBarItemCount - 1);
+        setPostion(progressBarItemCount - 1);
       }
       return;
     }
-  }, [itemPerScreen, progressBarItemCount, sliderIndex]);
+    console.log(sliderIndex);
+  }, [progressBarItemCount, sliderIndex]);
 
   useEffect(() => {
     window.addEventListener('resize', checkWindowSize);
@@ -156,14 +158,7 @@ export default function Slide2() {
     window.dispatchEvent(new Event('resize'));
   }, []);
 
-  console.log(itemPerScreen);
-
-  console.log(
-    'Math.floor(sliderIndex / itemPerScreen)',
-    Math.floor(sliderIndex / itemPerScreen)
-  );
-
-  console.log('sliderIndex', sliderIndex);
+  console.log(progressBarItemCount - 1);
 
   return (
     <>
@@ -187,6 +182,7 @@ export default function Slide2() {
             {items.map((item, index) => (
               <Box key={index} itemperscreen={itemPerScreen}>
                 <img src={item} alt={index} loading='lazy' />
+                <span>{index + 1}</span>
               </Box>
             ))}
           </Slider>
