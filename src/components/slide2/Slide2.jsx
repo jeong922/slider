@@ -115,13 +115,13 @@ export default function Slide2() {
 
   //FIXME: 슬라이드를 제일 마지막으로 이동 시킨 후 화면 크기를 크게 늘리거나 하면 슬라이드 내용이 사라지는 버그 수정
   // innderWidth가 변경되면서 sliderIndex 값이 적절하게 변경되지 않아서 발생하는 문제로 추정 됨
-  // try 1 : 나름 수정했으나 첫번째 슬라이드로 돌아가는 현상 발생
+  // try 1 : 나름 수정했으나 첫번째 슬라이드로 돌아가는 형태로 수정함
   const checkWindowSize = useCallback(() => {
     if (window.innerWidth > 1440) {
       setItemPerScreen(6);
       if (sliderIndex !== 0 && progressBarItemCount >= sliderIndex) {
         setSliderIndex(Math.floor(sliderIndex / itemPerScreen));
-        setPostion(sliderIndex - 1);
+        setPostion(0);
       }
       return;
     }
@@ -130,7 +130,7 @@ export default function Slide2() {
       setItemPerScreen(4);
       if (sliderIndex !== 0 && progressBarItemCount >= sliderIndex) {
         setSliderIndex(Math.floor(sliderIndex / itemPerScreen));
-        setPostion(sliderIndex - 1);
+        setPostion(0);
       }
       return;
     }
@@ -139,7 +139,7 @@ export default function Slide2() {
       setItemPerScreen(2);
       if (sliderIndex !== 0 && progressBarItemCount >= sliderIndex) {
         setSliderIndex(Math.floor(sliderIndex / itemPerScreen));
-        setPostion(sliderIndex - 1);
+        setPostion(0);
       }
       return;
     }
@@ -155,6 +155,15 @@ export default function Slide2() {
   useEffect(() => {
     window.dispatchEvent(new Event('resize'));
   }, []);
+
+  console.log(itemPerScreen);
+
+  console.log(
+    'Math.floor(sliderIndex / itemPerScreen)',
+    Math.floor(sliderIndex / itemPerScreen)
+  );
+
+  console.log('sliderIndex', sliderIndex);
 
   return (
     <>
@@ -175,11 +184,6 @@ export default function Slide2() {
             </svg>
           </Button>
           <Slider sliderIndex={sliderIndex}>
-            {console.log(
-              'Math.floor(sliderIndex / itemPerScreen)',
-              Math.floor(sliderIndex / itemPerScreen)
-            )}
-            {console.log('sliderIndex', sliderIndex)}
             {items.map((item, index) => (
               <Box key={index} itemperscreen={itemPerScreen}>
                 <img src={item} alt={index} loading='lazy' />
