@@ -5,34 +5,50 @@ import styles from './Slide1.module.css';
 export default function Slide1() {
   // const items = ['#845EC2', '#D65DB1', '#FF6F91', '#FF9671', '#FFC75F'];
   const items = [
-    './img/1.jpg',
-    './img/2.jpg',
-    './img/3.jpg',
-    './img/4.jpg',
-    './img/5.jpg',
-    './img/6.jpg',
-    './img/1.jpg',
-    './img/2.jpg',
-    './img/3.jpg',
-    './img/4.jpg',
-    './img/5.jpg',
-    './img/6.jpg',
+    { data: './img/1.jpg', id: 1 },
+    { data: './img/2.jpg', id: 2 },
+    { data: './img/3.jpg', id: 3 },
+    { data: './img/4.jpg', id: 4 },
+    { data: './img/5.jpg', id: 5 },
+    { data: './img/6.jpg', id: 6 },
+    { data: './img/1.jpg', id: 7 },
+    { data: './img/2.jpg', id: 8 },
+    { data: './img/3.jpg', id: 9 },
+    { data: './img/4.jpg', id: 10 },
+    { data: './img/5.jpg', id: 11 },
+    { data: './img/6.jpg', id: 12 },
   ];
-  const [slideIndex, setSlideIndex] = useState(0); // currnetIndex
-  const [size, setSize] = useState([0, 0]);
   const SLIDE_PADDING = 40;
+  const sliderPaddingStyle = `0 ${SLIDE_PADDING}px`;
+  const DATA_COUNT = 2;
+  const transitionTime = 300;
+  const itemSize = items.length;
+  const transitionStyle = `transform ${transitionTime}ms ease 0s`;
+  const [slideIndex, setSlideIndex] = useState(DATA_COUNT); // 현재 슬라이드 index 저장
+  const [size, setSize] = useState([0, 0]);
+  const [slideTransition, setTransition] = useState(transitionStyle);
+
+  const replaceSlide = (index) => {
+    console.log('replace', index);
+    setTimeout(() => {
+      setTransition('');
+      setSlideIndex(index);
+    }, transitionTime);
+  };
+
+  // 슬라이드 이동
   const slideHandler = (direction) => {
-    // setSlideIndex((slideIndex) => slideIndex + direction);
-    // console.log(slideIndex + direction);
-    if (slideIndex + direction <= 0) {
-      setSlideIndex(5);
-      return;
+    let index = slideIndex + direction;
+    console.log(index);
+    setSlideIndex(index);
+    if (index - DATA_COUNT < 0) {
+      index += itemSize;
+      replaceSlide(index);
+    } else if (index - DATA_COUNT >= itemSize) {
+      index -= itemSize;
+      replaceSlide(index);
     }
-    if (slideIndex + direction >= 6) {
-      setSlideIndex(0);
-      return;
-    }
-    setSlideIndex(slideIndex + direction);
+    setTransition(transitionStyle);
   };
 
   const getWindowSize = () => {
@@ -40,14 +56,13 @@ export default function Slide1() {
   };
 
   const getItemWidth = () => {
-    let itemWidth = size[0] * 0.8 - SLIDE_PADDING * 2;
-    // itemWidth = itemWidth > 1440 ? 1440 : itemWidth;
+    let itemWidth = size[0] * 0.9 - SLIDE_PADDING * 2;
+    itemWidth = itemWidth > 1060 ? 1060 : itemWidth;
     return itemWidth;
   };
 
-  const DATA_COUNT = 2;
   //TODO: 무한 슬라이드로 수정
-  const addSlide = () => {
+  const cloneSlide = () => {
     const front = [];
     const back = [];
     let index = 0;
@@ -60,6 +75,16 @@ export default function Slide1() {
     return [...front, ...items, ...back];
   };
 
+  const getItemIndex = (index) => {
+    index -= DATA_COUNT;
+    if (index < 0) {
+      index += itemSize;
+    } else if (index >= itemSize) {
+      index -= itemSize;
+    }
+    return index;
+  };
+
   useEffect(() => {
     window.addEventListener('resize', getWindowSize);
     return () => window.removeEventListener('resize', getWindowSize);
@@ -70,41 +95,48 @@ export default function Slide1() {
   }, []);
 
   return (
-    <div className={styles.container}>
-      <div className={styles.slider}>
-        <SlideButton direction='left' onClick={() => slideHandler(-1)} />
-        <SlideButton direction='right' onClick={() => slideHandler(1)} />
-        {/* 원래는 index를 key 값으로 줘서는 안된다. */}
-        <div className={styles.list}>
-          <div
-            className={styles.track}
-            style={{
-              // width: `${100 * items.length}vw`,
-              transition: 'all 300ms ease-in-out',
-              // -1 * (슬라이드 한 개 너비 반) + (슬라이드 한개 너미 * 현재 슬라이드 index)%
-              transform: `translateX(${
-                (-100 / items.length) * (0.5 + slideIndex)
-              }%)`,
-            }}
-          >
-            {items.map((item, index) => (
-              <div
-                key={index}
-                className={styles.item}
-                style={{ width: getItemWidth() || 'auto' }}
-              >
-                <img className={styles.img} src={item} alt='' />
-              </div>
-            ))}
-            {/* {addSlide().map((item, index) => (
-              <div
-                key={index}
-                className={styles.item}
-                style={{ width: getItemWidth() || 'auto' }}
-              >
-                <img className={styles.img} src={item} alt='' />
-              </div>
-            ))} */}
+    <div className={styles.wrapper}>
+      <div className={styles.container}>
+        <div className={styles.slider}>
+          <SlideButton direction='left' onClick={() => slideHandler(-1)} />
+          <SlideButton direction='right' onClick={() => slideHandler(1)} />
+          <div className={styles.list} style={{ padding: sliderPaddingStyle }}>
+            <div
+              className={styles.track}
+              style={{
+                // width: `${100 * items.length}vw`,
+                // translateX(${-1 * ((100 / items.length * 0.5) + (100 / items.length * slideIndex))%)
+                // -1 * (슬라이드 한 개 너비 반) + (슬라이드 한개 너미 * 현재 슬라이드 index)%
+                // -1 : 트랙의 기본 위치에서 왼쪽으로 이동하기 위해서는 음수 값 필요
+                // 100 / items.length * 0.5 : 슬라이드 트랙은 슬라이드 수 만큼 width를 가짐. 슬라이드 1개 width = 트랙너비 / 슬라이드 수
+                // 100 / items.length * slideIndex : 슬라이드가 중앙에 오도록 트랙을 이동 시키기 위해 슬라이드 한개의 너비 만큼 이동
+                // transition: 'all 300ms ease-in-out',
+                transform: `translateX(${
+                  (-100 / cloneSlide().length) * (0.5 + slideIndex)
+                }%)`,
+                transition: slideTransition,
+              }}
+            >
+              {cloneSlide().map((item, index) => {
+                const itemIndex = getItemIndex(index);
+                return (
+                  <div
+                    key={index}
+                    className={`${styles.item} ${
+                      slideIndex === index ? styles.currentSlide : ''
+                    }`}
+                    style={{ width: getItemWidth() || 'auto' }}
+                  >
+                    <img
+                      className={styles.img}
+                      src={items[itemIndex].data}
+                      alt=''
+                    />
+                    <span className={styles.number}>{items[itemIndex].id}</span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>

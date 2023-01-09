@@ -62,6 +62,10 @@ const Slider = styled.div`
 `;
 
 const Box = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   flex: 0 0 calc(100% / ${(props) => props.itemperscreen});
   width: calc(100% / ${(props) => props.itemperscreen});
   aspect-ratio: 16 / 9;
@@ -72,6 +76,11 @@ const Box = styled.div`
     object-fit: cover;
     user-select: none;
     padding: 0 0.25rem;
+  }
+  span {
+    position: absolute;
+    font-weight: 600;
+    font-size: 1.8rem;
   }
 `;
 
@@ -157,8 +166,6 @@ export default function Slide2() {
   useEffect(() => {
     window.dispatchEvent(new Event('resize'));
   }, []);
-
-  console.log(progressBarItemCount - 1);
 
   return (
     <>
