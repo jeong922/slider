@@ -57,7 +57,7 @@ export default function Slide1() {
 
   const getItemWidth = () => {
     let itemWidth = size[0] * 0.9 - SLIDE_PADDING * 2;
-    itemWidth = itemWidth > 1060 ? 1060 : itemWidth;
+    // itemWidth = itemWidth > 1060 ? 1060 : itemWidth;
     return itemWidth;
   };
 
