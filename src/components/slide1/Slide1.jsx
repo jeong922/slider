@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import SlideButton from './SlideButton';
 import styles from './Slide1.module.css';
+import Pagination from './Pagination';
 
 export default function Slide1() {
   // const items = ['#845EC2', '#D65DB1', '#FF6F91', '#FF9671', '#FFC75F'];
@@ -139,6 +140,11 @@ export default function Slide1() {
             </div>
           </div>
         </div>
+        <Pagination
+          itemSize={itemSize}
+          setSlideIndex={setSlideIndex}
+          slideIndex={slideIndex}
+        />
       </div>
     </div>
   );
