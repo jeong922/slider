@@ -10,10 +10,12 @@ export default function Pagination({ itemSize, setSlideIndex, slideIndex }) {
         {Array.from({ length: itemSize }, (_, i) => i).map((item) => (
           <li
             key={item}
-            className='w-3 h-3 rounded-full bg-[rgba(255,255,255,0.5)] mx-1 hover:bg-[rgba(255,255,255,0.9)] hover:cursor-pointer'
+            className='w-3 h-3 rounded-full bg-transparent border border-[rgba(255,255,255,0.4)] mx-1 hover:border-[rgba(255,255,255,0.9)] hover:cursor-pointer'
             style={{
-              backgroundColor: `${
-                slideIndex === item + 2 ? 'rgba(255,255,255,0.9)' : ''
+              border: `${
+                slideIndex === item + 2
+                  ? ' 1px solid rgba(255,255,255,0.9)'
+                  : ''
               }`,
             }}
             onClick={() => paginationHandler(item)}
