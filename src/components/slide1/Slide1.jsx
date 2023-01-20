@@ -1,7 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import SlideButton from './SlideButton';
 import styles from './Slide1.module.css';
 import Pagination from './Pagination';
+
+function useInterval(callback, delay) {
+  const savedCallback = useRef();
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  useEffect(() => {
+    function tick() {
+      savedCallback.current();
+    }
+    if (delay !== null) {
+      let id = setInterval(tick, delay);
+      return () => clearInterval(id);
+    }
+  }, [delay]);
+}
 
 export default function Slide1() {
   // const items = ['#845EC2', '#D65DB1', '#FF6F91', '#FF9671', '#FFC75F'];
@@ -94,6 +111,10 @@ export default function Slide1() {
   useEffect(() => {
     window.dispatchEvent(new Event('resize'));
   }, []);
+
+  useInterval(() => {
+    slideHandler(1);
+  }, 2000);
 
   return (
     <div className={styles.wrapper}>
